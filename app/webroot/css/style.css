@@ -1,0 +1,75 @@
+.trimming {
+position: absolute; 
+top: 60px; 
+left: 15px;
+width: 200px;
+height: 200px;
+overflow: hidden;
+}
+
+.img-question {
+ width: 100px;
+ height: 100px;
+ position: absolute; 
+ top: 0px; 
+ left: 0px;
+
+}
+
+.trimming2 {
+position: absolute;
+top: 0px; 
+left: 0px;
+width: 400px;
+height: 400px;
+overflow: hidden;
+}
+
+.trimming3 {
+position: absolute;
+top: 30px; 
+left: 0px;
+width: 400px;
+height: 400px;
+overflow: hidden;
+}
+
+.trimming4 {
+position: absolute;
+top: 30px; 
+left: 0px;
+width: 300px;
+height: 300px;
+overflow: hidden;
+}
+
+.img-responsive-question {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  top: 50px;
+}
+
+.appIconBig{
+ display: block;
+ margin-left: auto;
+ margin-right: auto;
+}
+
+.position-bottom-button {
+position: absolute; 
+top: 100px; 
+left: 400px;
+}
+
+.circle-image {
+position: absolute;
+width: 200px;
+height: 200px;
+}
+
+.boxContainer {
+display: flex;
+flex-direction: row-reverse;
+justify-content: space-between;
+}
