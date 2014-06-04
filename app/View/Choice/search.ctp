@@ -1,9 +1,12 @@
+<div id="header">
+        <div class="col-xs-12 text-center">
+            <h5>寄り道先を探す</h5>
+        </div>
+</div>
 
- <h4 class="text-center">検索</h4>
+<div class="container"><!-- container -->
 
 <div class="col-sm-12">
-  <div class="panel panel-default">
-    <div class="panel-body">
 
 
 
@@ -20,6 +23,30 @@
       ?>
 
       <div>
+
+            <div class="form-group">
+                  <label for="ChoiceStart" class="col-sm-2 control-label">エリア</label>
+                  <div class="col-sm-10">
+
+						<?php echo $this->Form->input
+								(
+								'Choice.start',
+									array(
+											'class' => 'form-control',
+											'required' => false,
+											'label' => false , 
+											'div' => false,
+											'placeholder' => "出発地点を入力して下さい。",
+											'id' => "ChoiceStart",
+											'type'=>'select',
+											'options'=> array('鎌倉'),
+											'required' => false
+											)
+								); 
+						?>
+
+                  </div>
+            </div>
 
             <div class="form-group">
                   <label for="ChoiceStart" class="col-sm-2 control-label">出発地点</label>
@@ -72,7 +99,7 @@
 
 		     <div class="form-group">
 		        <div class="col-sm-12 text-right">
-		            <?php echo $this->Form->submit('送信する', array('class' => 'btn btn-primary btn-block'));?>
+		            <?php echo $this->Form->submit('寄り道先を探す', array('class' => 'btn btn-primary btn-block'));?>
 		        </div>
 		     </div>
 
@@ -82,31 +109,4 @@
 
 
     </div>
-  </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

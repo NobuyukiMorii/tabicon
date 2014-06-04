@@ -6,6 +6,12 @@ class ChoicesController extends AppController {
 
     public $name = 'Choice';
     public $uses  = array('Choice','Site','Attachment');
+    public $helpers = array('GoogleMap');
+
+    public function index()
+    {
+
+    }
 
     public function search()
     {
@@ -14,6 +20,7 @@ class ChoicesController extends AppController {
             'recursive' => 0
         ));
         $this->set('options',$options);
+
 
     }
 
@@ -30,17 +37,17 @@ class ChoicesController extends AppController {
                     $this->render("search");
                 } else 
                 {
-                    //出発地点の緯度と経度を取得
+                    //出発地点の緯度と経度と名称を取得
                     $StartLatLon = $this->Site->find('all',array(
                         'conditions' => array('Site.id' => $this->request->data['Choice']['start']),
-                        'fields' => array('Site.longitude','Site.latitude','Site.name'),
+                        'fields' => array('Site.name','address','Site.longitude','Site.latitude','staying_time','price','description','open','close'),
                         'recursive' => 0
                         )
                     );
-                    //到着地点の緯度と経度を取得
+                    //到着地点の緯度と経度とを取得
                     $GoalLatLon = $this->Site->find('all',array(
                         'conditions' => array('Site.id' => $this->request->data['Choice']['goal']),
-                        'fields' => array('Site.longitude','Site.latitude','Site.name'),
+                        'fields' => array('Site.name','address','Site.longitude','Site.latitude','staying_time','price','description','open','close'),
                         'recursive' => 0
                         )
                     );
@@ -48,12 +55,12 @@ class ChoicesController extends AppController {
                     //現在の時間で開店している箇所のみを表示。（作業がよるなので、今は非表示）
                     $SuggestLatLon = $this->Site->find('all',array(
                         'conditions' => array(
-                            "NOT" => array("Site.id" => array($this->request->data['Choice']['start'], $this->request->data['Choice']['goal'])),
+                            "NOT" => array("Site.id" => array($this->request->data['Choice']['start'], $this->request->data['Choice']['goal'],"0")),
                             // 'Site.open <' => strtotime(date("H:i:s")),
                             // 'Site.close >' => strtotime(date("H:i:s"))
                         ),
                         'fields' => array('Site.name','address','Site.longitude','Site.latitude','staying_time','price','description','open','close'),
-                        'recursive' => 0
+                        'recursive' => 0,
                         )
                     );
                     //①出発地点と候補地点の歩行時間を取得。
@@ -63,13 +70,26 @@ class ChoicesController extends AppController {
                     //①と②と滞在時間を合計して、短い順に並べ替える。
                     $SuggestLatLon = $this->getTotalTime($SuggestLatLon);
 
-                    //現在の日付と時間
-                    $now = date('Y年n月j日H時i分');
+                    //寄り道しない場合の時間
+                    $DirectRoute = $this->getFromStartTime($StartLatLon,$GoalLatLon);
+                    $DirectRoute[0]["TotalTime"] = round($DirectRoute[0]["FromStartTime"]/60);
+
+                    //現在の日付と曜日と時間
+                    $week = array("日", "月", "火", "水", "木", "金", "土");
+                    $w = date("w");
+                    $today = date('Y/n/j');
+                    $now = date('H:i');
                     //候補地のデータをビューに渡して、テーブルとして表示。
-                    $this->set(compact('StartLatLon','GoalLatLon','SuggestLatLon','now'));
+                    $this->set(compact('StartLatLon','GoalLatLon','SuggestLatLon','DirectRoute','today','now','w','week'));
+                    $this->Session->write(compact('StartLatLon','GoalLatLon','SuggestLatLon','DirectRoute','today','now','w','week'));
                 }
 
             }
+        } else 
+        {
+        $info = $this->Session->read('StartLatLon','GoalLatLon','SuggestLatLon','DirectRoute','today','now','w','week');
+        pr($info);
+        $this->set(Compact($info));
         }
     }
 
@@ -157,13 +177,60 @@ class ChoicesController extends AppController {
         if(!empty($this->request->data))
         {
             if($this->request->data)
-            {
-                $this->request->data['Choice']['staying_time'] = round($this->request->data['Choice']['staying_time']/60);
-                $this->request->data['Choice']['FromStartTime'] = round($this->request->data['Choice']['FromStartTime']/60);
-                $this->request->data['Choice']['ToGoalTime'] = round($this->request->data['Choice']['ToGoalTime']/60);
+            {        
+                // まず全部秒で計算
+                //出発時間
+                $this->request->data['Choice']['DepartureTimeFromStart'] = strtotime($this->request->data['Choice']['now']);
+                //寄り道先への歩行時間
+                $this->request->data['Choice']['FromStartTime'] = intval($this->request->data['Choice']['FromStartTime']);
+                //寄り道先への到着時間
+                $this->request->data['Choice']['AllivalTimeToYorimiti'] = $this->request->data['Choice']['FromStartTime'] + $this->request->data['Choice']['DepartureTimeFromStart'];
+                //寄り道先の滞在時間
+                $this->request->data['Choice']['staying_time'] = intval($this->request->data['Choice']['staying_time']);
+                //寄り道先の出発時間
+                $this->request->data['Choice']['DepartureTimeFromYorimiti'] = $this->request->data['Choice']['AllivalTimeToYorimiti'] + $this->request->data['Choice']['staying_time'];
+                //目的地までの歩行時間
+                $this->request->data['Choice']['ToGoalTime'] = intval($this->request->data['Choice']['ToGoalTime']);
+                //目的地の到着時間
+                $this->request->data['Choice']['AllivalTimeToGoal'] = $this->request->data['Choice']['ToGoalTime'] + $this->request->data['Choice']['DepartureTimeFromYorimiti'];
+                //移動時間合計
+                $this->request->data['Choice']['TransTime'] = $this->request->data['Choice']['FromStartTime'] + $this->request->data['Choice']['ToGoalTime'];
+                //旅行時間合計
+                $this->request->data['Choice']['TotalTime'] = $this->request->data['Choice']['FromStartTime'] + $this->request->data['Choice']['ToGoalTime'] + $this->request->data['Choice']['staying_time'];
 
-                $this->request->data['Choice']['open'] = date('H時i分',strtotime($this->request->data['Choice']['open']));
-                $this->request->data['Choice']['close'] = date('H時i分',strtotime($this->request->data['Choice']['close']));
+                //滞在時間と移動時間の割合を算出
+                //寄り道先までの歩行時間割合
+                $this->request->data['Choice']['FromStartTimeRate'] = round($this->request->data['Choice']['FromStartTime'] / $this->request->data['Choice']['TotalTime'] * 100);
+                //ゴールまでの歩行時間割合
+                $this->request->data['Choice']['ToGoalTimeRate'] = round($this->request->data['Choice']['ToGoalTime'] / $this->request->data['Choice']['TotalTime'] * 100);
+                //滞在時間の時間割合
+                $this->request->data['Choice']['staying_timeRate'] = round($this->request->data['Choice']['staying_time'] / $this->request->data['Choice']['TotalTime'] * 100);
+                //移動時間全体の割合
+                $this->request->data['Choice']['TransTimeRate'] = round($this->request->data['Choice']['TransTime'] / $this->request->data['Choice']['TotalTime'] * 100);
+
+                //分に変換
+                //出発時間
+                $this->request->data['Choice']['DepartureTimeFromStart'] = date("H:i",$this->request->data['Choice']['DepartureTimeFromStart']);
+                //寄り道先への歩行時間
+                $this->request->data['Choice']['FromStartTime'] = round($this->request->data['Choice']['FromStartTime'] / 60);
+                //寄り道先への到着時間
+                $this->request->data['Choice']['AllivalTimeToYorimiti'] = date("H:i",$this->request->data['Choice']['AllivalTimeToYorimiti']);
+                //寄り道先の滞在時間
+                $this->request->data['Choice']['staying_time'] = round($this->request->data['Choice']['staying_time'] / 60);
+                //寄り道先の出発時間
+                $this->request->data['Choice']['DepartureTimeFromYorimiti'] = date("H:i",$this->request->data['Choice']['DepartureTimeFromYorimiti']);
+                //目的地までの歩行時間
+                $this->request->data['Choice']['ToGoalTime'] = round($this->request->data['Choice']['ToGoalTime'] / 60);
+                //目的地の到着時間
+                $this->request->data['Choice']['AllivalTimeToGoal'] = date("H:i",$this->request->data['Choice']['AllivalTimeToGoal']);
+                //移動時間合計
+                $this->request->data['Choice']['TransTime'] = round($this->request->data['Choice']['TransTime'] / 60);
+                //合計合計
+                $this->request->data['Choice']['TotalTime'] = round($this->request->data['Choice']['TotalTime'] / 60);
+
+                //お店の開店時間・閉店時間
+                $this->request->data['Choice']['open'] = date('H:i',strtotime($this->request->data['Choice']['open']));
+                $this->request->data['Choice']['close'] = date('H:i',strtotime($this->request->data['Choice']['close']));
 
                 if(!$this->Choice->validates())
                 {
@@ -171,9 +238,11 @@ class ChoicesController extends AppController {
                     $this->render("result");
                 } else 
                 {
-                    //保存する
-                    $this->Choice->save($this->request->data);
-                    $this->set('data',$this->request->data);
+                    //DBとセッションに保存する
+                    $data = $this->request->data;
+                    $this->Session->write('data',$data);
+                    $this->Choice->save($data);
+                    $this->set('data',$data);
                 }
             }
 
@@ -188,6 +257,16 @@ class ChoicesController extends AppController {
 
     }
 
+    public function map()
+    {
+    $data = $this->Session->read('data');
+    $this->set(compact('data'));
+    }
+
+    public function favorite()
+    {
+
+    }
 
 
 }

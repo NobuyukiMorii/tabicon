@@ -1,75 +1,29 @@
-.trimming {
-position: absolute; 
-top: 60px; 
-left: 15px;
-width: 200px;
-height: 200px;
-overflow: hidden;
+#header {
+  width : 100% ;
+  height: 35px;
+  background-color: #f5f5f5;
 }
 
-.img-question {
- width: 100px;
- height: 100px;
- position: absolute; 
- top: 0px; 
- left: 0px;
-
+.selector11{
+    border:#ccc solid 1px;  
+    display:block;  
+    padding:.2em .3em  
+}  
+.selector11b{
+	height: 30px;
+    border-left:#ccc solid 6px;  
+    padding:.3em .10em .3em .8em  
 }
 
-.trimming2 {
-position: absolute;
-top: 0px; 
-left: 0px;
-width: 400px;
-height: 400px;
-overflow: hidden;
+.selector12b{
+	height: 40px;
+    border-left:#ccc solid 6px;  
+    padding:.3em .10em .3em .8em  
 }
 
-.trimming3 {
-position: absolute;
-top: 30px; 
-left: 0px;
-width: 400px;
-height: 400px;
-overflow: hidden;
-}
-
-.trimming4 {
-position: absolute;
-top: 30px; 
-left: 0px;
-width: 300px;
-height: 300px;
-overflow: hidden;
-}
-
-.img-responsive-question {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  top: 50px;
-}
-
-.appIconBig{
- display: block;
- margin-left: auto;
- margin-right: auto;
-}
-
-.position-bottom-button {
-position: absolute; 
-top: 100px; 
-left: 400px;
-}
-
-.circle-image {
-position: absolute;
-width: 200px;
-height: 200px;
-}
-
-.boxContainer {
-display: flex;
-flex-direction: row-reverse;
-justify-content: space-between;
+.scr {
+  overflow: scroll;   /* スクロール表示 */ 
+  width: 320px;
+  height: 490px;
+  background-color: white;
 }

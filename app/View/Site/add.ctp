@@ -1,3 +1,8 @@
+<h4 class="text-center">観光地登録</h4>
+
+<div class="col-sm-12">
+  <div class="panel panel-default">
+    <div class="panel-body">
 
       <?php echo $this->Form->create
             (
@@ -12,7 +17,7 @@
             );
       ?>
 
-      <div class ="well">
+      <div>
 
             <div class="form-group">
                   <label for="Image0Model" class="col-sm-2 control-label">写真</label>
@@ -40,6 +45,7 @@
                         ?>
 
                   </div>
+                  ※ファイル名に日本語は使わないで下さい
             </div>
 
             <div class="form-group">
@@ -217,7 +223,7 @@
 
 		      <div class="form-group">
 		            <div class="col-sm-12 text-right">
-		                  <?php echo $this->Form->submit('登録する', array('class' => 'btn btn-success'));?>
+		                  <?php echo $this->Form->submit('登録する', array('class' => 'btn btn-lg btn-primary'));?>
 		            </div>
 		      </div>
 
@@ -229,7 +235,10 @@
 
       <?php echo $this->Form->end(); ?>
 
+    </div>
+  </div>
 
+</div>
 
 
 

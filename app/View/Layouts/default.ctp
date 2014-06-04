@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,6 +16,8 @@
       echo $this->fetch('css');
     ?>
 
+    <?=$this->Html->css('style.css')?>
+    <?=$this->Html->css('font-awesome.css')?>
     <!-- Bootstrap core CSS -->
     <?=$this->Html->css('bootstrap.css')?>
     <!-- Bootstrap core CSS -->
@@ -32,8 +34,6 @@
   </head>
   <body>
 
-    <div class="container"><!-- container -->
-
       <div>
         <?php echo $this->Session->flash('success'); ?>
         <?php echo $this->Session->flash('fail'); ?>
@@ -42,12 +42,20 @@
         <?php echo $this->fetch('content'); ?>
       </div>
 
-    </div> <!-- /container -->
-
     <div id="footer">
+
       <div class="container">
-        <a href="<?php echo $this->Html->url('/choices/search'); ?>"><p class="text-muted credit">旅のコンシェルジュ</a></p>
+        <div class="col-xs-4 text-center">
+            <a href="<?php echo $this->Html->url('/choices/search'); ?>"><span class="glyphicon glyphicon-search"></span><h6 style="margin: 3px 0px 3px 0px;">寄道案内</h6></a>
+        </div>
+        <div class="col-xs-4 text-center">
+            <a href="<?php echo $this->Html->url('/sites/read'); ?>"><span class="glyphicon glyphicon-th-list"></span><h6 style="margin: 3px 0px 3px 0px;">寄道一覧</h6></a>
+        </div>
+        <div class="col-xs-4 text-center">
+            <a href="<?php echo $this->Html->url('/choices/favorite'); ?>"><span class="glyphicon glyphicon-star-empty"></span><h6 style="margin: 3px 0px 3px 0px;">お気に入り</h6></a>
+        </div>
       </div>
+
     </div>
 
     <!-- Bootstrap core JavaScript

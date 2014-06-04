@@ -6,6 +6,7 @@ class SitesController extends AppController {
 
     public $name = 'Site';
     public $uses  = array('Site','Choice');
+    public $components = array('Paginator');
 
     public function add()
     {
@@ -60,10 +61,14 @@ class SitesController extends AppController {
 
     public function read()
     {
-        $data = $this->Site->find('all',array(
-            'conditions' => array(),
-            )
+        $this->Paginator->settings = array(
+                'limit' => 5,
+                'conditions' => array(
+                    "NOT" => array("Site.id" => array("0")),
+                ),
         );
+        $data = $this->Paginator->paginate('Site');
+
         $this->set('data',$data);
     }
 
