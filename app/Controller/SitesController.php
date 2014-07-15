@@ -62,7 +62,6 @@ class SitesController extends AppController {
     public function read()
     {
         $this->Paginator->settings = array(
-                'limit' => 5,
                 'conditions' => array(
                     "NOT" => array("Site.id" => array("0")),
                 ),

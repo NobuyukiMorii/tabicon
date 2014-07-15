@@ -46,7 +46,7 @@
 
       <div class="container">
         <div class="col-xs-4 text-center">
-            <a href="<?php echo $this->Html->url('/choices/search'); ?>"><span class="glyphicon glyphicon-search"></span><h6 style="margin: 3px 0px 3px 0px;">寄道案内</h6></a>
+            <a href="https://gisinfo.areaia.jp/?action=href&href=http://localhost:8888/tabicon/choices/search"><span class="glyphicon glyphicon-search"></span><h6 style="margin: 3px 0px 3px 0px;">寄道案内</h6></a>
         </div>
         <div class="col-xs-4 text-center">
             <a href="<?php echo $this->Html->url('/sites/read'); ?>"><span class="glyphicon glyphicon-th-list"></span><h6 style="margin: 3px 0px 3px 0px;">寄道一覧</h6></a>

@@ -1,50 +1,3 @@
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript">
-
-    google.maps.event.addDomListener(window, 'load', function()
-    {
-        var mapOptions = {
-            zoom: 20,
-            center: null,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            scaleControl: true
-        };
-        var mapObj = new google.maps.Map(document.getElementById('gmap'), mapOptions);
-
-
-        // ルートを表示するマップを設定
-        var directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(mapObj);
-
-
-        // 経由地点を設定
-        var wayPoints = [
-        {
-            location: "<?php echo  $data['Choice']['address'] ;?>"
-        }
-
-        ];
-
-
-        // 開始地点と終了地点、ルーティングの種類の設定
-        var request = {
-            origin: "<?php echo $data['Choice']['start_address'] ;?>",
-            destination: "<?php echo $data['Choice']['goal_address'] ;?>",
-            travelMode: google.maps.DirectionsTravelMode.WALKING,
-            waypoints: wayPoints
-        };
-
-
-        // ルート検索を行う
-        var directionsService = new google.maps.DirectionsService();
-        directionsService.route(request, function(result, status)
-        {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsRenderer.setDirections(result);
-            }
-        });
-    });
-</script>
 <div id="header">
         <div class="col-xs-4 pull-left">
             <a href="JavaScript:history.back();"><h5 style="margin-left: 0px;"><span class="glyphicon glyphicon-chevron-left"></span>戻る</h5></a>
@@ -61,7 +14,7 @@
 
         <div class="tab-content">
 
-            <div class="tab-pane active" id="tab1" style="height:430px;">
+            <div class="tab-pane active" id="tab1" style="height:330px;">
                 <h4 style="margin: 10px 0px 0px 0px;"><?php echo $data['Choice']['site_name'] ;?>への寄り道ルート</h4>
 
                     <div class="col-xs-8">
@@ -141,11 +94,13 @@
                         </th>
                     </table>
 
-                    <div id="gmap" style="width: 100%; height: 170px; border: 1px solid Gray;"></div>
+                    <a href="<?php echo $this->Html->url('/choices/map'); ?>">
+                    <button type="button" class="btn btn-default btn-lg btn-block" style="margin: 10px 0px 10px 0px;">地図</button>
+                    </a>
 
             </div>
 
-            <div class="tab-pane" id="tab2" style="height:440px;">
+            <div class="tab-pane" id="tab2" style="height:340px;">
                 <div class="col-xs-12">
                 
                         <div class="col-xs-12">
@@ -158,7 +113,7 @@
 
                         <table>
                             <th class="col-xs-12">
-                                <h6 style="margin: 60px 0px 0px 0px;"><label>住所:</label><?php echo  $data['Choice']['address'] ;?></h6>
+                                <h6 style="margin: 10px 0px 0px 0px;"><label>住所:</label><?php echo  $data['Choice']['address'] ;?></h6>
                                 <h6 style="margin: 3px 0px 0px 0px;"><label>料金:</label><?php echo  $data['Choice']['price'] ;?>円</h6>
                                 <h6 style="margin: 3px 0px 0px 0px;"><label>営業時間:</label><?php echo  $data['Choice']['open'] ;?>~<?php echo  $data['Choice']['close'] ;?></h6>
                             </th>

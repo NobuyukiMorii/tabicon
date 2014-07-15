@@ -7,9 +7,7 @@
         </div>
 </div>
 
-<div class="scr">
 <div class="container"><!-- container -->
-
     <div class="row">
         <div class="col-xs-12 text-left">
             <h6 style="margin: 3px 0px 3px 0px;">
@@ -17,7 +15,6 @@
             </h6>
         </div>
     </div>
-
     <div class="row">
         <table>
         <th class="col-xs-1">
@@ -33,12 +30,16 @@
         </th>
         </table>
     </div>
+</div>
 
+<hr style="margin: 5px 0px 3px 0px;">
 
+<div class="scr1">
+<div class="container"><!-- container -->
 
     <?php for ($i = 0; $i < count($SuggestLatLon); $i++) { ?>
     <div class="row">
-        <hr style="margin: 3px 0px 3px 0px;">
+
         <table>
         <th class="col-xs-7">
         <h4 style="margin: 3px 0px 3px 0px;"><?php echo h($SuggestLatLon[$i]['name']); ?></h4>
@@ -49,9 +50,9 @@
             $time = intval($SuggestLatLon[$i]['TotalTime']);
             $transtime = $SuggestLatLon[$i]['TotalTime'] - round($SuggestLatLon[$i]['staying_time']/60);
             $staying_time = $SuggestLatLon[$i]['staying_time'] /60;
-            $time_rate = $time /120 * 100;
-            $transtime_rate = $transtime / 120 * 100;
-            $staying_time_rate = $staying_time / 120 * 100;
+            $time_rate = $time /240 * 100;
+            $transtime_rate = $transtime / 240 * 100;
+            $staying_time_rate = $staying_time / 240 * 100;
             echo date("H:i",strtotime("+ $time minute"));
             ;?>
         </h4>
@@ -97,6 +98,7 @@
             <?php echo $this->Form->end(); ?>
         </th>
         </table>
+        <hr style="margin: 5px 0px 3px 0px;">
     </div>
     <?php } ?>
     <hr style="margin: 3px 0px 3px 0px;">

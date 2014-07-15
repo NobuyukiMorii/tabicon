@@ -64,7 +64,7 @@
 											'id' => "ChoiceStart",
 											'type'=>'select',
 											'options'=> $options,
-											'required' => false
+											'required' => true
 											)
 								); 
 						?>
@@ -88,7 +88,7 @@
 											'id' => "ChoiceGoal",
 											'type'=>'select',
 											'options'=> $options,
-											'required' => false
+											'required' => true
 											)
 								); 
 						?>
@@ -96,6 +96,10 @@
                   </div>
             </div>
 
+			<?php 
+			echo $this->Form->hidden('Choice.HereLatitude',array('value'=>$_GET["lati"]));
+			echo $this->Form->hidden('Choice.HereLongitude',array('value'=>$_GET["long"]));
+			?>
 
 		     <div class="form-group">
 		        <div class="col-sm-12 text-right">

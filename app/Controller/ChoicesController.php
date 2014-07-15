@@ -10,7 +10,7 @@ class ChoicesController extends AppController {
 
     public function index()
     {
-
+        $this->autoLayout = false;
     }
 
     public function search()
@@ -21,22 +21,23 @@ class ChoicesController extends AppController {
         ));
         $this->set('options',$options);
 
-
     }
 
     public function result()
     {
+
         if(!empty($this->request->data))
         {
+
             if($this->request->data)
             {
-
                 if(!$this->Site->validates())
                 {
                     $this->set("error",$this->Site->validationErrors);
                     $this->render("search");
                 } else 
                 {
+
                     //出発地点の緯度と経度と名称を取得
                     $StartLatLon = $this->Site->find('all',array(
                         'conditions' => array('Site.id' => $this->request->data['Choice']['start']),
@@ -44,6 +45,14 @@ class ChoicesController extends AppController {
                         'recursive' => 0
                         )
                     );
+
+                    if($this->request->data['Choice']['start'] == 0) {
+                        $StartLatLon[0]['Site']['latitude'] = $this->request->data['Choice']['HereLatitude'];
+                        $StartLatLon[0]['Site']['longitude'] = $this->request->data['Choice']['HereLongitude'];
+                        $address = $this->getAddress($StartLatLon[0]['Site']['latitude'],$StartLatLon[0]['Site']['longitude']);
+                        $StartLatLon[0]['Site']['address'] = $address;
+                    }
+
                     //到着地点の緯度と経度とを取得
                     $GoalLatLon = $this->Site->find('all',array(
                         'conditions' => array('Site.id' => $this->request->data['Choice']['goal']),
@@ -51,6 +60,13 @@ class ChoicesController extends AppController {
                         'recursive' => 0
                         )
                     );
+
+                    if($this->request->data['Choice']['goal'] == 0) {
+                        $GoalLatLon[0]['Site']['latitude'] = $this->request->data['Choice']['HereLatitude'];
+                        $GoalLatLon[0]['Site']['longitude'] = $this->request->data['Choice']['HereLongitude'];
+                        $address = $this->getAddress($GoalLatLon[0]['Site']['latitude'],$GoalLatLon[0]['Site']['longitude']);
+                        $GoalLatLon[0]['Site']['address'] = $address;
+                    }
                     //候補地点として出発地点と到着地点以外の観光地の緯度と経度と滞在時間を取得。
                     //現在の時間で開店している箇所のみを表示。（作業がよるなので、今は非表示）
                     $SuggestLatLon = $this->Site->find('all',array(
@@ -91,6 +107,18 @@ class ChoicesController extends AppController {
         pr($info);
         $this->set(Compact($info));
         }
+    }
+
+    public function getAddress($Lati,$Lon)
+    {
+            $url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='.$Lati.','.$Lon.'&language=ja&sensor=false';
+            $json = file_get_contents($url);
+            $rg = json_decode($json);
+            $results = $rg->{'results'}[0]->{'formatted_address'} ;
+            $address = split(",",$results);
+            $address = $address[1];
+
+            return $address;
     }
 
     public function getFromStartTime($StartLatLon,$SuggestLatLon)

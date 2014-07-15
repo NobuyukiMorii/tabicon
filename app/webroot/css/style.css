@@ -21,9 +21,16 @@
     padding:.3em .10em .3em .8em  
 }
 
-.scr {
+.scr1 {
   overflow: scroll;   /* スクロール表示 */ 
   width: 320px;
-  height: 490px;
+  height: 300px;
+  background-color: white;
+}
+
+.scr2 {
+  overflow: scroll;   /* スクロール表示 */ 
+  width: 320px;
+  height: 383px;
   background-color: white;
 }
